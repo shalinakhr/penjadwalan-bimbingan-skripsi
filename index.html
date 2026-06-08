@@ -87,7 +87,7 @@
                 <div>
                     <div class="flex justify-between items-center mb-2">
                         <label class="block text-sm font-bold text-slate-700">Password</label>
-                        <a href="#" class="text-xs font-bold text-blue-600 hover:text-blue-800">Lupa Password?</a>
+                        <a href="#" onclick="toggleAuth('forgot')" class="text-xs font-bold text-blue-600 hover:text-blue-800 transition-colors">Lupa Password?</a>
                     </div>
                     <input type="password" placeholder="••••••••" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3.5 text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 focus:bg-white transition-all shadow-sm" required>
                 </div>
@@ -151,6 +151,36 @@
                 Sudah punya akun? <a href="#" onclick="toggleAuth('login')" class="text-blue-600 font-bold hover:underline">Masuk di sini</a>
             </div>
         </div>
+        
+        <!-- Forgot Password Form -->
+        <div id="forgot-form" class="bg-white rounded-3xl border border-slate-200 shadow-2xl p-8 md:p-10 w-full max-w-md relative z-10 hidden transition-all">
+            <div class="flex justify-center mb-6">
+                <div class="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center text-blue-600 shadow-sm border border-blue-100">
+                    <i class="ph-fill ph-lock-key text-3xl"></i>
+                </div>
+            </div>
+            <div class="text-center mb-8">
+                <h2 class="text-2xl font-bold text-slate-800">Lupa Password?</h2>
+                <p class="text-sm font-medium text-slate-500 mt-2 leading-relaxed">Jangan khawatir! Masukkan email akademik Anda dan kami akan mengirimkan tautan untuk mereset password.</p>
+            </div>
+            
+            <form class="space-y-5" onsubmit="event.preventDefault(); showToast('Tautan reset password telah dikirim ke email Anda!'); toggleAuth('login');">
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Email Terdaftar</label>
+                    <input type="email" placeholder="contoh@students.undip.ac.id" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3.5 text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 focus:bg-white transition-all shadow-sm" required>
+                </div>
+                
+                <div class="pt-4">
+                    <button type="submit" class="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold shadow-lg shadow-blue-600/20 transition-transform transform hover:-translate-y-0.5">
+                        Kirim Link Reset
+                    </button>
+                </div>
+            </form>
+            
+            <div class="mt-8 text-center text-sm font-medium text-slate-500">
+                Kembali ke <a href="#" onclick="toggleAuth('login')" class="text-blue-600 font-bold hover:underline">Halaman Login</a>
+            </div>
+        </div>
     </div>
 
     <!-- Mobile Overlay -->
@@ -200,9 +230,9 @@
             </div>
         </div>
 
-        <div class="p-5 md:p-6 m-4 bg-slate-800/40 rounded-2xl border border-slate-700/50 backdrop-blur-sm shrink-0">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-500 to-indigo-500 flex items-center justify-center text-white shadow-inner shrink-0">
+        <button onclick="switchView('user-profile', null)" class="p-5 md:p-6 m-4 bg-slate-800/40 rounded-2xl border border-slate-700/50 backdrop-blur-sm shrink-0 hover:bg-slate-700/50 transition-colors w-[calc(100%-2rem)] text-left flex items-center justify-between group">
+            <div class="flex items-center gap-3 overflow-hidden">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-500 to-indigo-500 flex items-center justify-center text-white shadow-inner shrink-0 group-hover:scale-105 transition-transform">
                     <i class="ph-bold ph-user text-lg"></i>
                 </div>
                 <div class="flex-1 min-w-0">
@@ -210,7 +240,8 @@
                     <p class="text-xs text-slate-400 truncate" id="user-role">Mahasiswa</p>
                 </div>
             </div>
-        </div>
+            <i class="ph-bold ph-caret-right text-slate-500 group-hover:text-white transition-colors"></i>
+        </button>
     </aside>
 
     <!-- Main Content -->
@@ -220,7 +251,7 @@
         <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMTUsIDIzLCA0MiwgMC4wMykiLz48L3N2Zz4=')] opacity-50 pointer-events-none z-0"></div>
 
         <!-- Header -->
-        <header class="bg-white/80 backdrop-blur-md h-[60px] md:h-[72px] border-b border-slate-200 flex items-center justify-between px-4 md:px-10 shrink-0 relative z-10 w-full">
+        <header class="bg-white/80 backdrop-blur-md h-[60px] md:h-[72px] border-b border-slate-200 flex items-center justify-between px-4 md:px-10 shrink-0 relative z-30 w-full">
             <div class="flex items-center gap-3">
                 <button onclick="toggleSidebar()" class="w-10 h-10 rounded-lg flex md:hidden items-center justify-center text-slate-600 hover:bg-slate-100 transition-colors">
                     <i class="ph-bold ph-list text-2xl"></i>
@@ -229,7 +260,7 @@
             </div>
             <div class="flex items-center gap-3 md:gap-4 relative">
                 <!-- Notification Dropdown Toggle -->
-                <button onclick="toggleNotification()" class="w-9 h-9 md:w-10 md:h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 hover:bg-slate-200 transition-colors relative">
+                <button id="notif-btn" onclick="toggleNotification(event)" class="w-9 h-9 md:w-10 md:h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 hover:bg-slate-200 transition-colors relative">
                     <i class="ph-bold ph-bell text-base md:text-lg"></i>
                     <span class="absolute top-2 right-2.5 w-2 h-2 bg-rose-500 rounded-full border-2 border-white"></span>
                 </button>
@@ -241,26 +272,52 @@
                         <button class="text-xs text-blue-600 hover:text-blue-800 font-bold">Tandai dibaca</button>
                     </div>
                     <div class="max-h-80 overflow-y-auto divide-y divide-slate-50">
-                        <a href="#" class="block p-4 hover:bg-slate-50 transition-colors bg-blue-50/30">
-                            <div class="flex gap-3 items-start">
-                                <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5"><i class="ph-bold ph-check"></i></div>
-                                <div>
-                                    <p class="text-sm font-bold text-slate-800 mb-0.5">Jadwal Disetujui</p>
-                                    <p class="text-xs text-slate-600 leading-snug">Dr. Kardison menyetujui jadwal bimbingan Anda pada 15 Juni 2026.</p>
-                                    <p class="text-[10px] text-slate-400 mt-1.5 font-medium">Baru saja</p>
+                        <!-- MHS Notifications -->
+                        <div id="notif-mhs-list">
+                            <a href="#" class="block p-4 hover:bg-slate-50 transition-colors bg-blue-50/30">
+                                <div class="flex gap-3 items-start">
+                                    <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5"><i class="ph-bold ph-check"></i></div>
+                                    <div>
+                                        <p class="text-sm font-bold text-slate-800 mb-0.5">Jadwal Disetujui</p>
+                                        <p class="text-xs text-slate-600 leading-snug">Dr. Kardison menyetujui jadwal bimbingan Anda pada 15 Juni 2026.</p>
+                                        <p class="text-[10px] text-slate-400 mt-1.5 font-medium">Baru saja</p>
+                                    </div>
                                 </div>
-                            </div>
-                        </a>
-                        <a href="#" class="block p-4 hover:bg-slate-50 transition-colors">
-                            <div class="flex gap-3 items-start">
-                                <div class="w-8 h-8 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center shrink-0 mt-0.5"><i class="ph-bold ph-info"></i></div>
-                                <div>
-                                    <p class="text-sm font-bold text-slate-800 mb-0.5">Pengingat Bimbingan</p>
-                                    <p class="text-xs text-slate-600 leading-snug">Jangan lupa persiapkan draft Bab 3 untuk bimbingan besok.</p>
-                                    <p class="text-[10px] text-slate-400 mt-1.5 font-medium">2 jam yang lalu</p>
+                            </a>
+                            <a href="#" class="block p-4 hover:bg-slate-50 transition-colors">
+                                <div class="flex gap-3 items-start">
+                                    <div class="w-8 h-8 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center shrink-0 mt-0.5"><i class="ph-bold ph-info"></i></div>
+                                    <div>
+                                        <p class="text-sm font-bold text-slate-800 mb-0.5">Pengingat Bimbingan</p>
+                                        <p class="text-xs text-slate-600 leading-snug">Jangan lupa persiapkan draft Bab 3 untuk bimbingan besok.</p>
+                                        <p class="text-[10px] text-slate-400 mt-1.5 font-medium">2 jam yang lalu</p>
+                                    </div>
                                 </div>
-                            </div>
-                        </a>
+                            </a>
+                        </div>
+                        <!-- DSN Notifications -->
+                        <div id="notif-dsn-list" class="hidden">
+                            <a href="#" class="block p-4 hover:bg-slate-50 transition-colors bg-blue-50/30">
+                                <div class="flex gap-3 items-start">
+                                    <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center shrink-0 mt-0.5"><i class="ph-bold ph-calendar-plus"></i></div>
+                                    <div>
+                                        <p class="text-sm font-bold text-slate-800 mb-0.5">Pengajuan Jadwal Baru</p>
+                                        <p class="text-xs text-slate-600 leading-snug">Shalina Fakhira mengajukan jadwal bimbingan Bab 3.</p>
+                                        <p class="text-[10px] text-slate-400 mt-1.5 font-medium">10 menit yang lalu</p>
+                                    </div>
+                                </div>
+                            </a>
+                            <a href="#" class="block p-4 hover:bg-slate-50 transition-colors">
+                                <div class="flex gap-3 items-start">
+                                    <div class="w-8 h-8 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center shrink-0 mt-0.5"><i class="ph-bold ph-chat-text"></i></div>
+                                    <div>
+                                        <p class="text-sm font-bold text-slate-800 mb-0.5">Revisi Dikirim</p>
+                                        <p class="text-xs text-slate-600 leading-snug">Valentina mengunggah revisi Bab 1.</p>
+                                        <p class="text-[10px] text-slate-400 mt-1.5 font-medium">1 jam yang lalu</p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
                     </div>
                     <a href="#" class="block px-4 py-3 text-center text-xs font-bold text-slate-500 hover:text-slate-700 hover:bg-slate-50 transition-colors border-t border-slate-100">
                         Lihat Semua Notifikasi
@@ -279,7 +336,7 @@
         </header>
 
         <!-- Scrollable Area -->
-        <div class="flex-1 overflow-y-auto overflow-x-hidden p-4 sm:p-6 md:p-10 relative z-10 w-full" onclick="closeNotificationOutside()">
+        <div class="flex-1 overflow-y-auto overflow-x-hidden p-4 sm:p-6 md:p-10 relative z-10 w-full">
 
             <!-- VIEW: Dashboard Mahasiswa -->
             <div id="mhs-dashboard" class="view-section space-y-6 md:space-y-8 max-w-6xl mx-auto">
@@ -338,6 +395,37 @@
                                 <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center border-[3px] sm:border-4 border-white shrink-0 -ml-1.5 sm:ml-0"><i class="ph-bold ph-graduation-cap sm:text-xl"></i></div>
                                 <div class="text-left sm:text-center mt-1 sm:mt-0"><p class="text-sm sm:text-xs font-bold text-slate-400">Sidang</p></div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stats -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
+                    <div class="bg-white p-5 md:p-6 rounded-2xl border border-slate-100 shadow-soft flex items-center gap-4 md:gap-5">
+                        <div class="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center text-2xl md:text-3xl shadow-inner shrink-0">
+                            <i class="ph-fill ph-clock-counter-clockwise"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs md:text-sm font-medium text-slate-500 mb-0.5">Menunggu Konfirmasi</p>
+                            <p class="text-2xl md:text-3xl font-bold text-slate-800">1</p>
+                        </div>
+                    </div>
+                    <div class="bg-white p-5 md:p-6 rounded-2xl border border-slate-100 shadow-soft flex items-center gap-4 md:gap-5">
+                        <div class="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-emerald-50 text-emerald-500 flex items-center justify-center text-2xl md:text-3xl shadow-inner shrink-0">
+                            <i class="ph-fill ph-check-circle"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs md:text-sm font-medium text-slate-500 mb-0.5">Bimbingan Selesai</p>
+                            <p class="text-2xl md:text-3xl font-bold text-slate-800">4</p>
+                        </div>
+                    </div>
+                    <div class="bg-white p-5 md:p-6 rounded-2xl border border-slate-100 shadow-soft flex items-center gap-4 md:gap-5 sm:col-span-2 md:col-span-1">
+                        <div class="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-rose-50 text-rose-500 flex items-center justify-center text-2xl md:text-3xl shadow-inner shrink-0">
+                            <i class="ph-fill ph-x-circle"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs md:text-sm font-medium text-slate-500 mb-0.5">Ditolak / Reschedule</p>
+                            <p class="text-2xl md:text-3xl font-bold text-slate-800">0</p>
                         </div>
                     </div>
                 </div>
@@ -836,8 +924,93 @@
 
             </div>
 
+            <!-- VIEW: Profil Pengguna -->
+            <div id="user-profile" class="view-section max-w-4xl mx-auto pb-10">
+                <div class="bg-white rounded-3xl border border-slate-100 shadow-soft overflow-hidden">
+                    <!-- Profile Banner -->
+                    <div class="h-32 md:h-48 bg-gradient-to-r from-navy-900 to-navy-800 relative">
+                        <div class="absolute inset-0 opacity-20 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMjU1LCAyNTUsIDI1NSwgMC41KSIvPjwvc3ZnPg==')]"></div>
+                    </div>
+                    
+                    <div class="px-6 md:px-10 pb-8 relative">
+                        <!-- Profile Header -->
+                        <div class="flex flex-col sm:flex-row items-center sm:items-end gap-5 -mt-12 md:-mt-16 mb-6">
+                            <div class="w-24 h-24 md:w-32 md:h-32 bg-white rounded-full p-1.5 md:p-2 shadow-lg relative z-10">
+                                <div class="w-full h-full bg-gradient-to-tr from-blue-500 to-indigo-500 rounded-full flex items-center justify-center text-white">
+                                    <i class="ph-bold ph-user text-4xl md:text-5xl"></i>
+                                </div>
+                            </div>
+                            <div class="text-center sm:text-left flex-1 mt-2 sm:mt-0">
+                                <h2 class="text-2xl md:text-3xl font-bold text-slate-800" id="profile-name">Akmal Hasan Mulyadi</h2>
+                                <p class="text-sm md:text-base font-medium text-slate-500 mt-1" id="profile-role-detail">Mahasiswa - 12010224130041</p>
+                            </div>
+                            <button onclick="openEditProfileModal()" class="px-6 py-2.5 bg-blue-50 text-blue-600 hover:bg-blue-100 font-bold rounded-xl transition-colors flex items-center justify-center gap-2 mt-4 sm:mt-0 w-full sm:w-auto">
+                                <i class="ph-bold ph-pencil-simple"></i> Edit Profil
+                            </button>
+                        </div>
+                        
+                        <!-- Profile Info Grid -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8 p-6 bg-slate-50 rounded-2xl border border-slate-100">
+                            <div class="space-y-5">
+                                <div>
+                                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Email</label>
+                                    <p class="text-sm md:text-base font-medium text-slate-800 truncate" id="profile-email">akmal.hm@students.undip.ac.id</p>
+                                </div>
+                                <div>
+                                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Fakultas</label>
+                                    <p class="text-sm md:text-base font-medium text-slate-800">Fakultas Ekonomika dan Bisnis</p>
+                                </div>
+                                <div id="profile-prodi-container">
+                                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Program Studi</label>
+                                    <p class="text-sm md:text-base font-medium text-slate-800">S1 Manajemen</p>
+                                </div>
+                            </div>
+                            <div class="space-y-5">
+                                <div>
+                                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Nomor Telepon</label>
+                                    <p class="text-sm md:text-base font-medium text-slate-800" id="profile-phone">+62 812-3456-7890</p>
+                                </div>
+                                <div>
+                                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Status Akademik</label>
+                                    <br>
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-100 text-emerald-700 text-xs font-bold rounded-lg mt-1">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Aktif
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </main>
+
+    <!-- Edit Profile Modal -->
+    <div id="edit-profile-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] hidden opacity-0 transition-opacity duration-300 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl border border-slate-200 shadow-2xl p-6 md:p-8 w-full max-w-lg relative transform scale-95 transition-transform duration-300" id="edit-profile-content">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-bold text-slate-800">Edit Profil</h3>
+                <button type="button" onclick="closeEditProfileModal()" class="text-slate-400 hover:text-slate-600 transition-colors">
+                    <i class="ph-bold ph-x text-xl"></i>
+                </button>
+            </div>
+            <form onsubmit="saveProfile(event)" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Nama Lengkap</label>
+                    <input type="text" id="edit-name" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3.5 text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 focus:bg-white transition-all shadow-sm" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Nomor Telepon</label>
+                    <input type="text" id="edit-phone" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3.5 text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 focus:bg-white transition-all shadow-sm" required>
+                </div>
+                <div class="pt-4 flex flex-col sm:flex-row justify-end gap-3">
+                    <button type="button" onclick="closeEditProfileModal()" class="px-5 py-3 border border-slate-200 rounded-xl text-slate-600 font-bold hover:bg-slate-50 transition-colors w-full sm:w-auto">Batal</button>
+                    <button type="submit" class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold shadow-lg shadow-blue-600/20 transition-transform transform hover:-translate-y-0.5 w-full sm:w-auto">Simpan Perubahan</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <!-- Custom Toast Notification -->
     <div id="toast" class="fixed bottom-6 right-6 md:bottom-10 md:right-10 bg-navy-900 text-white px-5 py-3 md:px-6 md:py-4 rounded-xl shadow-2xl transform translate-y-20 opacity-0 transition-all duration-300 ease-out z-[60] flex items-center gap-3 pointer-events-none">
@@ -852,8 +1025,19 @@
             setupDragAndDrop();
         });
 
+        // Global click listener untuk menutup notifikasi jika klik di luar area
+        document.addEventListener('click', (e) => {
+            const notifMenu = document.getElementById('notification-menu');
+            const notifBtn = document.getElementById('notif-btn');
+            if (notifMenu && !notifMenu.classList.contains('hidden')) {
+                if (!notifMenu.contains(e.target) && !notifBtn.contains(e.target)) {
+                    closeNotificationOutside();
+                }
+            }
+        });
+
         // NOTIFICATION TOGGLE
-        function toggleNotification() {
+        function toggleNotification(event) {
             event.stopPropagation();
             const notifMenu = document.getElementById('notification-menu');
             if (notifMenu.classList.contains('hidden')) {
@@ -894,10 +1078,52 @@
             }
         }
 
+        // EDIT PROFILE MODAL LOGIC
+        function openEditProfileModal() {
+            const modal = document.getElementById('edit-profile-modal');
+            const content = document.getElementById('edit-profile-content');
+            
+            // Pre-fill form
+            document.getElementById('edit-name').value = document.getElementById('profile-name').textContent;
+            document.getElementById('edit-phone').value = document.getElementById('profile-phone').textContent;
+
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                content.classList.remove('scale-95');
+            }, 10);
+        }
+
+        function closeEditProfileModal() {
+            const modal = document.getElementById('edit-profile-modal');
+            const content = document.getElementById('edit-profile-content');
+            
+            modal.classList.add('opacity-0');
+            content.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        function saveProfile(e) {
+            e.preventDefault();
+            const newName = document.getElementById('edit-name').value;
+            const newPhone = document.getElementById('edit-phone').value;
+            
+            // Update UI elements
+            document.getElementById('profile-name').textContent = newName;
+            document.getElementById('user-name').textContent = newName;
+            document.getElementById('profile-phone').textContent = newPhone;
+            
+            closeEditProfileModal();
+            showToast('Profil berhasil diperbarui!');
+        }
+
         // AUTHENTICATION LOGIC
         function toggleAuth(view) {
             document.getElementById('login-form').classList.toggle('hidden', view !== 'login');
             document.getElementById('register-form').classList.toggle('hidden', view !== 'register');
+            document.getElementById('forgot-form').classList.toggle('hidden', view !== 'forgot');
         }
 
         function handleLogin(e) {
@@ -916,6 +1142,7 @@
         }
 
         function doLogin(role, name) {
+            closeNotificationOutside(); // Force close notification on login
             const authScreen = document.getElementById('auth-screen');
             const userNameEl = document.getElementById('user-name');
             const userRoleEl = document.getElementById('user-role');
@@ -926,14 +1153,24 @@
                 userRoleEl.textContent = 'Mahasiswa';
                 document.getElementById('menu-mahasiswa').classList.remove('hidden');
                 document.getElementById('menu-dosen').classList.add('hidden');
+                
+                document.getElementById('notif-mhs-list').classList.remove('hidden');
+                document.getElementById('notif-dsn-list').classList.add('hidden');
+                
                 const firstNav = document.querySelectorAll('#menu-mahasiswa .nav-item')[0];
                 switchView('mhs-dashboard', firstNav);
+                updateProfileInfo('mhs', name);
             } else {
                 userRoleEl.textContent = 'Dosen Pembimbing';
                 document.getElementById('menu-mahasiswa').classList.add('hidden');
                 document.getElementById('menu-dosen').classList.remove('hidden');
+                
+                document.getElementById('notif-mhs-list').classList.add('hidden');
+                document.getElementById('notif-dsn-list').classList.remove('hidden');
+                
                 const dsnNav = document.querySelector('#menu-dosen .nav-item');
                 switchView('dsn-dashboard', dsnNav);
+                updateProfileInfo('dsn', name);
             }
 
             authScreen.classList.add('auth-hidden');
@@ -941,10 +1178,31 @@
         }
 
         function logout() {
+            closeNotificationOutside(); // Force close notification on logout
             const authScreen = document.getElementById('auth-screen');
             authScreen.classList.remove('auth-hidden');
             toggleAuth('login');
             document.getElementById('login-id').value = '';
+        }
+
+        function updateProfileInfo(role, name) {
+            document.getElementById('profile-name').textContent = name;
+            const profileRoleDetail = document.getElementById('profile-role-detail');
+            const profileEmail = document.getElementById('profile-email');
+            const profileProdi = document.getElementById('profile-prodi-container');
+            const profilePhone = document.getElementById('profile-phone');
+
+            if (role === 'mhs') {
+                profileRoleDetail.textContent = 'Mahasiswa - 12010224130041';
+                profileEmail.textContent = 'akmal.hm@students.undip.ac.id';
+                profilePhone.textContent = '+62 812-3456-7890';
+                profileProdi.classList.remove('hidden');
+            } else {
+                profileRoleDetail.textContent = 'Dosen Pembimbing - 198001012005011001';
+                profileEmail.textContent = 'kardison.lb@lecturer.undip.ac.id';
+                profilePhone.textContent = '+62 899-1234-5678';
+                profileProdi.classList.add('hidden'); // Dosen usually doesn't have a specific "Program Studi" context like students
+            }
         }
 
         // DRAG & DROP FILE UPLOAD LOGIC
@@ -1040,6 +1298,8 @@
         }
 
         function switchView(viewId, btnElement) {
+            closeNotificationOutside(); // Force close notification on view change
+            
             if (window.innerWidth < 768) {
                 const sidebar = document.getElementById('sidebar');
                 if (!sidebar.classList.contains('-translate-x-full')) toggleSidebar();
@@ -1056,6 +1316,7 @@
             if(viewId === 'mhs-pengajuan') pageTitle.textContent = 'Pengajuan Jadwal';
             if(viewId === 'mhs-evaluasi') pageTitle.textContent = 'Evaluasi Dosen';
             if(viewId === 'dsn-dashboard') pageTitle.textContent = 'Pusat Persetujuan Dosen';
+            if(viewId === 'user-profile') pageTitle.textContent = 'Profil Pengguna';
         }
 
         function showToast(message) {
